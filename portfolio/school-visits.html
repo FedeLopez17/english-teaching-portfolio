@@ -126,8 +126,7 @@
                     class="visit-gallery"
                     aria-label="Photographs from the visit to Washington Lockhart Technical School"
                   >
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="utu-lockhart"
                       type="button"
                       aria-label="Enlarge photograph 1"
                     >
@@ -139,8 +138,7 @@
                       <span class="gallery-number">01 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="utu-lockhart"
                       type="button"
                       aria-label="Enlarge photograph 2"
                     >
@@ -152,8 +150,7 @@
                       <span class="gallery-number">02 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="utu-lockhart"
                       type="button"
                       aria-label="Enlarge photograph 3"
                     >
@@ -165,8 +162,7 @@
                       <span class="gallery-number">03 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="utu-lockhart"
                       type="button"
                       aria-label="Enlarge photograph 4"
                     >
@@ -178,8 +174,7 @@
                       <span class="gallery-number">04 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="utu-lockhart"
                       type="button"
                       aria-label="Enlarge photograph 5"
                     >
@@ -339,8 +334,7 @@
                     class="visit-gallery"
                     aria-label="Photographs from the visit to Liceo N.º 4"
                   >
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="liceo-cuatro"
                       type="button"
                       aria-label="Enlarge photograph 1"
                     >
@@ -352,8 +346,7 @@
                       <span class="gallery-number">01 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="liceo-cuatro"
                       type="button"
                       aria-label="Enlarge photograph 2"
                     >
@@ -365,8 +358,7 @@
                       <span class="gallery-number">02 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="liceo-cuatro"
                       type="button"
                       aria-label="Enlarge photograph 3"
                     >
@@ -378,8 +370,7 @@
                       <span class="gallery-number">03 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="liceo-cuatro"
                       type="button"
                       aria-label="Enlarge photograph 4"
                     >
@@ -391,8 +382,7 @@
                       <span class="gallery-number">04 / 05</span>
                     </button>
 
-                    <button
-                      class="visit-gallery-item"
+                    <button class="visit-gallery-item lightbox-trigger" data-gallery="liceo-cuatro"
                       type="button"
                       aria-label="Enlarge photograph 5"
                     >
@@ -603,277 +593,5 @@
     </div>
 
     <script src="script.js"></script>
-
-    <!-- Gallery lightbox functionality -->
-    <script>
-      const lightbox = document.getElementById("imageLightbox");
-      const lightboxImage = lightbox.querySelector(".lightbox-image");
-      const imageWrap = lightbox.querySelector(".lightbox-image-wrap");
-
-      const closeButton = lightbox.querySelector(".lightbox-close");
-      const previousButton = lightbox.querySelector(".lightbox-prev");
-      const nextButton = lightbox.querySelector(".lightbox-next");
-
-      const zoomInButton = document.getElementById("zoomIn");
-      const zoomOutButton = document.getElementById("zoomOut");
-      const zoomResetButton = document.getElementById("zoomReset");
-      const counter = document.getElementById("lightboxCounter");
-
-      // Collect every image from both galleries.
-      const allImages = Array.from(
-        document.querySelectorAll(".visit-gallery-item img"),
-      );
-
-      let currentIndex = 0;
-      let scale = 1;
-      let translateX = 0;
-      let translateY = 0;
-
-      let isDragging = false;
-      let hasDragged = false;
-      let startX = 0;
-      let startY = 0;
-      let previousX = 0;
-      let previousY = 0;
-
-      let touchStartX = 0;
-      let touchStartY = 0;
-
-      let previousFocus = null;
-
-      function updateImageTransform() {
-        lightboxImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-
-        lightboxImage.classList.toggle("zoomed", scale > 1);
-        lightboxImage.style.cursor = scale > 1 ? "grab" : "zoom-in";
-      }
-
-      function resetZoom() {
-        scale = 1;
-        translateX = 0;
-        translateY = 0;
-        updateImageTransform();
-      }
-
-      function showImage(index) {
-        if (!allImages.length) return;
-
-        // Wrap around when reaching either end.
-        currentIndex = (index + allImages.length) % allImages.length;
-
-        const selectedImage = allImages[currentIndex];
-
-        lightboxImage.src = selectedImage.src;
-        lightboxImage.alt = selectedImage.alt;
-
-        counter.textContent = `${currentIndex + 1} / ${allImages.length}`;
-
-        resetZoom();
-      }
-
-      function openLightbox(index) {
-        previousFocus = document.activeElement;
-
-        showImage(index);
-
-        lightbox.classList.add("active");
-        lightbox.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-
-        closeButton.focus();
-      }
-
-      function closeLightbox() {
-        lightbox.classList.remove("active");
-        lightbox.setAttribute("aria-hidden", "true");
-
-        lightboxImage.src = "";
-        document.body.style.overflow = "";
-
-        resetZoom();
-
-        if (previousFocus) {
-          previousFocus.focus();
-        }
-      }
-
-      function showNext() {
-        showImage(currentIndex + 1);
-      }
-
-      function showPrevious() {
-        showImage(currentIndex - 1);
-      }
-
-      function setZoom(newScale) {
-        scale = Math.max(1, Math.min(4, newScale));
-
-        if (scale === 1) {
-          translateX = 0;
-          translateY = 0;
-        }
-
-        updateImageTransform();
-      }
-
-      function toggleZoom() {
-        if (scale > 1) {
-          resetZoom();
-        } else {
-          setZoom(2);
-        }
-      }
-
-      // Open the viewer from any thumbnail.
-      document
-        .querySelectorAll(".visit-gallery-item")
-        .forEach((item, index) => {
-          item.addEventListener("click", () => {
-            openLightbox(index);
-          });
-        });
-
-      // Navigation controls.
-      previousButton.addEventListener("click", showPrevious);
-      nextButton.addEventListener("click", showNext);
-
-      // Zoom controls.
-      zoomInButton.addEventListener("click", () => {
-        setZoom(scale + 0.5);
-      });
-
-      zoomOutButton.addEventListener("click", () => {
-        setZoom(scale - 0.5);
-      });
-
-      zoomResetButton.addEventListener("click", resetZoom);
-
-      // Clicking the image toggles zoom.
-      lightboxImage.addEventListener("click", (event) => {
-        if (hasDragged) {
-          hasDragged = false;
-          return;
-        }
-
-        toggleZoom();
-      });
-
-      // Drag to explore the enlarged image.
-      lightboxImage.addEventListener("pointerdown", (event) => {
-        if (scale <= 1) return;
-
-        isDragging = true;
-        hasDragged = false;
-
-        startX = event.clientX;
-        startY = event.clientY;
-
-        previousX = translateX;
-        previousY = translateY;
-
-        lightboxImage.classList.add("dragging");
-        lightboxImage.setPointerCapture(event.pointerId);
-      });
-
-      lightboxImage.addEventListener("pointermove", (event) => {
-        if (!isDragging) return;
-
-        const deltaX = event.clientX - startX;
-        const deltaY = event.clientY - startY;
-
-        if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
-          hasDragged = true;
-        }
-
-        translateX = previousX + deltaX;
-        translateY = previousY + deltaY;
-
-        updateImageTransform();
-      });
-
-      function stopDragging() {
-        isDragging = false;
-        lightboxImage.classList.remove("dragging");
-      }
-
-      lightboxImage.addEventListener("pointerup", stopDragging);
-      lightboxImage.addEventListener("pointercancel", stopDragging);
-
-      // Swipe left/right to navigate on touch screens.
-      imageWrap.addEventListener(
-        "touchstart",
-        (event) => {
-          if (scale > 1) return;
-
-          touchStartX = event.changedTouches[0].screenX;
-          touchStartY = event.changedTouches[0].screenY;
-        },
-        { passive: true },
-      );
-
-      imageWrap.addEventListener(
-        "touchend",
-        (event) => {
-          if (scale > 1) return;
-
-          const touchEndX = event.changedTouches[0].screenX;
-          const touchEndY = event.changedTouches[0].screenY;
-
-          const differenceX = touchEndX - touchStartX;
-          const differenceY = touchEndY - touchStartY;
-
-          // Only treat predominantly horizontal gestures as navigation.
-          if (
-            Math.abs(differenceX) > 50 &&
-            Math.abs(differenceX) > Math.abs(differenceY)
-          ) {
-            if (differenceX < 0) {
-              showNext();
-            } else {
-              showPrevious();
-            }
-          }
-        },
-        { passive: true },
-      );
-
-      // Close when clicking the dark background.
-      lightbox.addEventListener("click", (event) => {
-        if (event.target === lightbox) {
-          closeLightbox();
-        }
-      });
-
-      closeButton.addEventListener("click", closeLightbox);
-
-      // Keyboard shortcuts.
-      document.addEventListener("keydown", (event) => {
-        if (!lightbox.classList.contains("active")) return;
-
-        if (event.key === "Escape") {
-          closeLightbox();
-        }
-
-        if (event.key === "ArrowRight" && scale === 1) {
-          showNext();
-        }
-
-        if (event.key === "ArrowLeft" && scale === 1) {
-          showPrevious();
-        }
-
-        if (event.key === "+" || event.key === "=") {
-          setZoom(scale + 0.5);
-        }
-
-        if (event.key === "-") {
-          setZoom(scale - 0.5);
-        }
-
-        if (event.key === "0") {
-          resetZoom();
-        }
-      });
-    </script>
   </body>
 </html>
